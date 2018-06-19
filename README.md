@@ -1,8 +1,8 @@
+[![Build Status](https://travis-ci.org/siman-man/comment_collector.svg?branch=master)](https://travis-ci.org/siman-man/comment_collector)
+
 # CommentCollector
 
 Get source code comments of Ruby.
-
-require RUBY_VERSION >= '2.6.0'
 
 
 ## Installation
