@@ -208,5 +208,21 @@ RSpec.describe CommentCollector do
       expect(comment1.last_column).to eq(20)
       expect(comment1.value).to eq("#=> 'hi'\n")
     end
+
+    it 'test case 10' do
+      src = <<~SRC
+        # encoding: utf-8
+      SRC
+
+      comments = CommentCollector.get(src)
+      expect(comments.size).to eq(1)
+
+      comment1 = comments[0]
+      expect(comment1.first_lineno).to eq(0)
+      expect(comment1.first_column).to eq(0)
+      expect(comment1.last_lineno).to eq(0)
+      expect(comment1.last_column).to eq(17)
+      expect(comment1.value).to eq("# encoding: utf-8\n")
+    end
   end
 end
