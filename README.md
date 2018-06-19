@@ -31,7 +31,7 @@ end
 
 =begin
 multi line
-commens
+comments
 =end
 ```
 
@@ -64,7 +64,7 @@ $ ruby comment.rb
 ====================
 =begin
 multi line
-commens
+comments
 =end
 ====================
 ```
