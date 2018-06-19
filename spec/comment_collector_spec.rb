@@ -193,12 +193,10 @@ RSpec.describe CommentCollector do
       expect(comment2.value).to eq("# test\n")
     end
 
-    xit 'test case 9' do
+    it 'test case 9' do
       src = <<~SRC
         Foo.new.say #=> 'hi'
       SRC
-
-      puts src
 
       comments = CommentCollector.get(src)
       expect(comments.size).to eq(1)

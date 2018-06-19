@@ -1,3 +1,4 @@
+require 'parser/current'
 require 'comment_collector/version'
 
 class CommentCollector
@@ -13,7 +14,7 @@ class CommentCollector
     @end_of_lines = src.lines.map { |l| l.size - 1 } # for 0-index
     @src = src
 
-    traverse(RubyVM::AST.parse(src))
+    traverse(Parser::CurrentRuby.parse(src))
   end
 
   def comments
@@ -27,7 +28,7 @@ class CommentCollector
 
     @src.lines.each_with_index do |line, lineno|
       sp = @last_of_lines[lineno]
-      l = line[sp..]
+      l = line[sp..-1]
 
       break if line.start_with?('__END__')
 
@@ -74,18 +75,22 @@ class CommentCollector
   private
 
   def traverse(parent)
-    if parent.type != 'NODE_SCOPE'
-      first_lineno = parent.first_lineno - 1
-      first_column = parent.first_column
-      last_lineno = parent.last_lineno - 1
-      last_column = parent.last_column
+    return if parent.nil?
+
+    loc = parent.loc
+
+    unless [:args].include?(parent.type)
+      first_lineno = loc.line - 1
+      first_column = loc.column
+      last_lineno = loc.last_line - 1
+      last_column = loc.last_column
 
       @last_of_lines[first_lineno] = [@last_of_lines[first_lineno], first_column].max
       @last_of_lines[last_lineno] = [@last_of_lines[last_lineno], last_column].max
       @exists_any_node[first_lineno] = @exists_any_node[last_lineno] = true
     end
 
-    parent.children.compact.each do |child|
+    parent.children.select { |n| n.instance_of?(Parser::AST::Node) }.each do |child|
       traverse(child)
     end
   end
